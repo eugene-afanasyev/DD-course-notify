@@ -10,6 +10,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         NotificationBuilder nb = new NotificationBuilder();
+        nb.setOpacity(0.9);
         Notification n = nb.build();
         n.show();
     }
