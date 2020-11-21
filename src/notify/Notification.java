@@ -2,7 +2,9 @@ package notify;
 
 import javafx.animation.*;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,6 +17,8 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import notify.alignments.HorizontalAlignment;
 import notify.alignments.VerticalAlignment;
+
+import java.awt.*;
 
 public class Notification {
     private final Stage notifyStage;
@@ -30,15 +34,21 @@ public class Notification {
 
         buildCloseButton();
 
-        FlowPane root = new FlowPane(notifyMessage, closeButton);
-        root.setBackground(Background.EMPTY);
-        root.setAlignment(Pos.TOP_RIGHT);
+//        FlowPane root = new FlowPane(closeButton);
+//        root.setBackground(Background.EMPTY);
+//        root.setAlignment(Pos.TOP_RIGHT);
+        FlowPane menuPane = new FlowPane(closeButton);
+        menuPane.setAlignment(Pos.CENTER_RIGHT);
 
-        Pane canvas = new Pane(root);
+        FlowPane canvas = new FlowPane();
+        canvas.setOrientation(Orientation.VERTICAL);
+        canvas.getChildren().addAll(menuPane);
         canvas.setStyle("-fx-background-color: #363636;");
-        canvas.setPrefSize(width,height);
+        canvas.setPrefSize(width, height);
 
         notifyStage = new Stage();
+        notifyStage.setWidth(width);
+        notifyStage.setHeight(height);
         notifyStage.setOpacity(opacity);
         notifyStage.initStyle(StageStyle.UNDECORATED);
         Scene notifyScene = new Scene(canvas);
@@ -49,16 +59,39 @@ public class Notification {
     }
 
     public void setStageAlignment() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        switch (horizontalAlignmentAlign) {
+            case LEFT:
+                notifyStage.setX(30);
+                break;
+            case RIGHT:
+                notifyStage.setX(screenSize.width - notifyStage.getWidth() - 30);
+                break;
+            default:
+                notifyStage.setX((int)(screenSize.width / 2) - notifyStage.getWidth() / 2);
+                break;
+        }
 
+        switch (verticalAlignmentAlign) {
+            case TOP:
+                notifyStage.setY(30);
+                break;
+            case BOTTOM:
+                notifyStage.setY(screenSize.height - notifyStage.getHeight() - 30);
+                break;
+            default:
+                notifyStage.setY((int)(screenSize.height / 2) - notifyStage.getHeight() / 2);
+                break;
+        }
     }
 
     public void buildCloseButton() {
         closeButton = new Button();
         Image btnIcon = new Image(getClass().getResourceAsStream("resources/close-icon.png"));
-        btnIcon.widthProperty().add(1   );
+        ImageView iconImg = new ImageView(btnIcon);
 
         closeButton.setBackground(Background.EMPTY);
-        closeButton.setGraphic(new ImageView(btnIcon));
+        closeButton.setGraphic(iconImg);
 
         closeButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override

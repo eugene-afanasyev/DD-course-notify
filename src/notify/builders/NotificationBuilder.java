@@ -11,7 +11,7 @@ public class NotificationBuilder {
     private int height;
     private double opacity = 1;
     private HorizontalAlignment horizontalAlignment = HorizontalAlignment.CENTER;
-    private VerticalAlignment verticalAlignment = VerticalAlignment.CENTER;
+    private VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 
     public NotificationBuilder() {
         width = 400;
@@ -27,11 +27,11 @@ public class NotificationBuilder {
     }
 
     public void setHeight(int height) {
-        this.height = height % 500;
+        this.height = height;
     }
 
     public void setWidth(int width) {
-        this.width = width % 600;
+        this.width = width;
     }
 
     public void setOpacity(double opacity) {
