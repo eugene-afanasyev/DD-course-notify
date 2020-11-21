@@ -12,11 +12,11 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         NotificationBuilder nb = new NotificationBuilder();
-        nb.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        nb.setVerticalAlignment(VerticalAlignment.CENTER);
+        nb.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        nb.setVerticalAlignment(VerticalAlignment.TOP);
         nb.setOpacity(0.94);
-        nb.setHeight(600);
-        nb.setWidth(500);
+        nb.setHeight(200);
+        nb.setWidth(300);
 
         Notification n = nb.build();
         n.show();

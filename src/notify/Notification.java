@@ -34,15 +34,11 @@ public class Notification {
 
         buildCloseButton();
 
-//        FlowPane root = new FlowPane(closeButton);
-//        root.setBackground(Background.EMPTY);
-//        root.setAlignment(Pos.TOP_RIGHT);
         FlowPane menuPane = new FlowPane(closeButton);
         menuPane.setAlignment(Pos.TOP_LEFT);
 
-        FlowPane canvas = new FlowPane();
-        canvas.setOrientation(Orientation.VERTICAL);
-        canvas.getChildren().addAll(menuPane);
+        BorderPane canvas = new BorderPane();
+        canvas.setTop(menuPane);
         canvas.setStyle("-fx-background-color: #363636;");
         canvas.setPrefSize(width, height);
 
