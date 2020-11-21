@@ -10,6 +10,8 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -20,7 +22,10 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 enum HorizontalAlignment {
     LEFT, RIGHT, CENTER
@@ -37,25 +42,17 @@ public class Notification {
 //    private final HorizontalAlignment hAlign;
 
     Label notifyMessage = new Label("");
-    Button closeButton = new Button("Close");
+    private Button closeButton;
 
     public Notification(int width, int height, double opacity) {
-        closeButton.setFont(new Font(16));
-        var buttonBg = new Background(new BackgroundFill(Color.ALICEBLUE, new CornerRadii(1), Insets.EMPTY));
-        closeButton.setBackground(buttonBg);
-        closeButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                notifyStage.close();
-            }
-        });
+        buildCloseButton();
 
         FlowPane root = new FlowPane(notifyMessage, closeButton);
         root.setBackground(Background.EMPTY);
         root.setAlignment(Pos.TOP_RIGHT);
 
         canvas = new Pane(root);
-        canvas.setStyle("-fx-background-color: dimgray;");
+        canvas.setStyle("-fx-background-color: #363636;");
         canvas.setPrefSize(width,height);
 
         notifyStage = new Stage();
@@ -65,6 +62,22 @@ public class Notification {
         notifyStage.setAlwaysOnTop(true);
         notifyStage.setScene(notifyScene);
 
+    }
+
+    public void buildCloseButton() {
+        closeButton = new Button();
+        Image btnIcon = new Image(getClass().getResourceAsStream("resources/close-icon.png"));
+        btnIcon.widthProperty().add(1   );
+
+        closeButton.setBackground(Background.EMPTY);
+        closeButton.setGraphic(new ImageView(btnIcon));
+
+        closeButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                notifyStage.close();
+            }
+        });
     }
 
     public void show() {
