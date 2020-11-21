@@ -38,7 +38,7 @@ public class Notification {
 //        root.setBackground(Background.EMPTY);
 //        root.setAlignment(Pos.TOP_RIGHT);
         FlowPane menuPane = new FlowPane(closeButton);
-        menuPane.setAlignment(Pos.CENTER_RIGHT);
+        menuPane.setAlignment(Pos.TOP_LEFT);
 
         FlowPane canvas = new FlowPane();
         canvas.setOrientation(Orientation.VERTICAL);
