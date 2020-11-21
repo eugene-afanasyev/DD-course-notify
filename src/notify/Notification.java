@@ -2,11 +2,7 @@ package notify;
 
 import javafx.animation.*;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,44 +10,31 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-enum HorizontalAlignment {
-    LEFT, RIGHT, CENTER
-}
-
-enum VerticalAlignment {
-    TOP, BOTTOM, CENTER
-}
+import notify.alignments.HorizontalAlignment;
+import notify.alignments.VerticalAlignment;
 
 public class Notification {
     private final Stage notifyStage;
-    private final Pane canvas;
-//    private final VerticalAlignment vAlign;
-//    private final HorizontalAlignment hAlign;
+    private final VerticalAlignment verticalAlignmentAlign;
+    private final HorizontalAlignment horizontalAlignmentAlign;
 
     Label notifyMessage = new Label("");
     private Button closeButton;
 
-    public Notification(int width, int height, double opacity) {
+    public Notification(int width, int height, double opacity, VerticalAlignment vAl, HorizontalAlignment hAl) {
+        verticalAlignmentAlign = vAl;
+        horizontalAlignmentAlign = hAl;
+
         buildCloseButton();
 
         FlowPane root = new FlowPane(notifyMessage, closeButton);
         root.setBackground(Background.EMPTY);
         root.setAlignment(Pos.TOP_RIGHT);
 
-        canvas = new Pane(root);
+        Pane canvas = new Pane(root);
         canvas.setStyle("-fx-background-color: #363636;");
         canvas.setPrefSize(width,height);
 
@@ -61,6 +44,11 @@ public class Notification {
         Scene notifyScene = new Scene(canvas);
         notifyStage.setAlwaysOnTop(true);
         notifyStage.setScene(notifyScene);
+
+        setStageAlignment();
+    }
+
+    public void setStageAlignment() {
 
     }
 
@@ -92,5 +80,13 @@ public class Notification {
         var kf = new KeyFrame(Duration.millis(800), kv);
         tl.getKeyFrames().addAll(kf);
         tl.play();
+    }
+
+    public HorizontalAlignment getHorizontalAlignmentAlign() {
+        return horizontalAlignmentAlign;
+    }
+
+    public VerticalAlignment getVerticalAlignmentAlign() {
+        return verticalAlignmentAlign;
     }
 }
