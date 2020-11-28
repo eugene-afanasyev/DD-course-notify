@@ -1,5 +1,6 @@
 package notify.builders;
 
+import javafx.scene.paint.Paint;
 import notify.alignments.HorizontalAlignment;
 import notify.Notification;
 import notify.alignments.VerticalAlignment;
@@ -12,6 +13,7 @@ public class NotificationBuilder {
     private double opacity = 1;
     private HorizontalAlignment horizontalAlignment = HorizontalAlignment.CENTER;
     private VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
+    private String notificationMessage = "";
 
     public NotificationBuilder() {
         width = 400;
@@ -22,6 +24,8 @@ public class NotificationBuilder {
         notification = new Notification(
                 width, height, opacity,
                 verticalAlignment, horizontalAlignment);
+
+        notification.buildMessage(25, Paint.valueOf("#F0FFFF"), notificationMessage, 10);
 
         return notification;
     }
@@ -44,5 +48,13 @@ public class NotificationBuilder {
 
     public void setVerticalAlignment(VerticalAlignment vAlign) {
         verticalAlignment = vAlign;
+    }
+
+    public void setNotificationMessage(String message) {
+        notificationMessage = message;
+    }
+
+    public void addControlButtons() {
+
     }
 }

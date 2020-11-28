@@ -2,9 +2,8 @@ package notify;
 
 import javafx.animation.*;
 import javafx.event.EventHandler;
-import javafx.geometry.Orientation;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,6 +11,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -21,40 +22,74 @@ import notify.alignments.VerticalAlignment;
 import java.awt.*;
 
 public class Notification {
+    private Scene notifyScene;
     private final Stage notifyStage;
+
+    private final int width;
+    private final int height;
+
+    private VBox contentBox;
+    private BorderPane canvas = new BorderPane();
+
     private final VerticalAlignment verticalAlignmentAlign;
     private final HorizontalAlignment horizontalAlignmentAlign;
 
-    Label notifyMessage = new Label("");
+    private Label notifyMessage;
     private Button closeButton;
 
+
     public Notification(int width, int height, double opacity, VerticalAlignment vAl, HorizontalAlignment hAl) {
+        this.height = height;
+        this.width = width;
+
         verticalAlignmentAlign = vAl;
         horizontalAlignmentAlign = hAl;
 
         buildCloseButton();
 
+        // building canvas
         FlowPane menuPane = new FlowPane(closeButton);
         menuPane.setAlignment(Pos.TOP_LEFT);
 
-        BorderPane canvas = new BorderPane();
         canvas.setTop(menuPane);
         canvas.setStyle("-fx-background-color: #363636;");
         canvas.setPrefSize(width, height);
 
+        notifyScene = new Scene(canvas);
+
+        // building scene
         notifyStage = new Stage();
         notifyStage.setWidth(width);
-        notifyStage.setHeight(height);
+        notifyStage.setMinHeight(height);
         notifyStage.setOpacity(opacity);
         notifyStage.initStyle(StageStyle.UNDECORATED);
-        Scene notifyScene = new Scene(canvas);
         notifyStage.setAlwaysOnTop(true);
         notifyStage.setScene(notifyScene);
 
         setStageAlignment();
     }
 
-    public void setStageAlignment() {
+    public void buildMessage(int fontSize, Paint paint, String message, int padding) {
+        notifyMessage = new Label(message);
+        notifyMessage.setMinHeight(Region.USE_PREF_SIZE);
+        notifyMessage.setAlignment(Pos.TOP_CENTER);
+        notifyMessage.setPadding(new Insets(padding));
+        notifyMessage.setFont(new Font(fontSize));
+        notifyMessage.setTextFill(paint);
+        notifyMessage.setWrapText(true);
+
+        contentBox = new VBox(notifyMessage);
+        contentBox.setPrefSize(width, height * 0.6);
+
+        canvas.setCenter(contentBox);
+        BorderPane.setAlignment(contentBox, Pos.TOP_CENTER);
+    }
+
+    protected void buildMessageBox() {
+
+    }
+
+    protected void setStageAlignment() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         switch (horizontalAlignmentAlign) {
             case LEFT:
@@ -81,7 +116,7 @@ public class Notification {
         }
     }
 
-    public void buildCloseButton() {
+    protected void buildCloseButton() {
         closeButton = new Button();
         Image btnIcon = new Image(getClass().getResourceAsStream("resources/close-icon.png"));
         ImageView iconImg = new ImageView(btnIcon);
@@ -97,7 +132,7 @@ public class Notification {
         });
     }
 
-    public void show() {
+    protected void show() {
         notifyStage.show();
     }
 

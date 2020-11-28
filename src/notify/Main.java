@@ -17,6 +17,7 @@ public class Main extends Application {
         nb.setOpacity(0.94);
         nb.setHeight(200);
         nb.setWidth(300);
+        nb.setNotificationMessage("dsas d as d as da s d as d a s d as  d a sd  as d as d  as d a s da sd  as dasdasdasd a sd asdeww frwrev ybb");
 
         Notification n = nb.build();
         n.show();
