@@ -19,6 +19,7 @@ public class Main extends Application {
         nb.setHeight(200);
         nb.setWidth(300);
         nb.buildMessage(25, Paint.valueOf("#F0FFFF"), "daaaaaaaaaaaaaaaaaaaaaaa",10);
+        nb.addControlButtons();
 
         Notification n = nb.build();
         n.show();

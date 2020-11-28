@@ -2,8 +2,9 @@ package notify.builders;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import notify.alignments.HorizontalAlignment;
@@ -19,6 +20,8 @@ public class NotificationBuilder {
     private HorizontalAlignment horizontalAlignment = HorizontalAlignment.CENTER;
     private VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 
+    private HBox controlsPane = new HBox();
+
     private Label notifyMessage;
 
     public NotificationBuilder() {
@@ -30,6 +33,7 @@ public class NotificationBuilder {
         notification = new Notification(
                 width, height, opacity,
                 verticalAlignment, horizontalAlignment, notifyMessage);
+        notification.addControls(controlsPane);
 
         return notification;
     }
@@ -66,6 +70,20 @@ public class NotificationBuilder {
     }
 
     public void addControlButtons() {
+        Button okButton = new Button("Ok");
+        okButton.setFont(new Font("Bold", 18));
+        okButton.setBackground(Background.EMPTY);
+        okButton.setTextFill(Paint.valueOf("#bbccdd"));
+        okButton.setStyle("-fx-border-width: 1; -fx-border-color: #bbccdd; -fx-border-radius: 1");
 
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setFont(new Font(18));
+        cancelButton.setBackground(Background.EMPTY);
+        cancelButton.setTextFill(Paint.valueOf("#bbccdd"));
+        cancelButton.setStyle("-fx-border-width: 1; -fx-border-color: #bbccdd; -fx-border-radius: 1");
+
+        controlsPane = new HBox(okButton, cancelButton);
+        controlsPane.setAlignment(Pos.BOTTOM_CENTER);
+        controlsPane.setSpacing(5);
     }
 }

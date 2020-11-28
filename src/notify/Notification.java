@@ -4,6 +4,7 @@ import javafx.animation.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,7 +29,7 @@ public class Notification {
     private final int width;
     private final int height;
 
-    private VBox contentBox;
+    private VBox contentBox = new VBox();
     private BorderPane canvas = new BorderPane();
 
     private final VerticalAlignment verticalAlignmentAlign;
@@ -49,7 +50,7 @@ public class Notification {
         verticalAlignmentAlign = vAl;
         horizontalAlignmentAlign = hAl;
 
-        contentBox = new VBox(notifyMessage);
+        contentBox.getChildren().addAll(notifyMessage);
         contentBox.setPrefSize(width, height * 0.6);
 
         canvas.setCenter(contentBox);
@@ -77,6 +78,10 @@ public class Notification {
         notifyStage.setScene(notifyScene);
 
         setStageAlignment();
+    }
+
+    public void addControls(Node node) {
+        contentBox.getChildren().addAll(node);
     }
 
     protected void setStageAlignment() {
