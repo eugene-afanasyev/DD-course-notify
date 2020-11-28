@@ -1,6 +1,11 @@
 package notify.builders;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Font;
 import notify.alignments.HorizontalAlignment;
 import notify.Notification;
 import notify.alignments.VerticalAlignment;
@@ -13,7 +18,8 @@ public class NotificationBuilder {
     private double opacity = 1;
     private HorizontalAlignment horizontalAlignment = HorizontalAlignment.CENTER;
     private VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
-    private String notificationMessage = "";
+
+    private Label notifyMessage;
 
     public NotificationBuilder() {
         width = 400;
@@ -23,11 +29,20 @@ public class NotificationBuilder {
     public Notification build() {
         notification = new Notification(
                 width, height, opacity,
-                verticalAlignment, horizontalAlignment);
-
-        notification.buildMessage(25, Paint.valueOf("#F0FFFF"), notificationMessage, 10);
+                verticalAlignment, horizontalAlignment, notifyMessage);
 
         return notification;
+    }
+
+    public void buildMessage(int fontSize, Paint paint, String message, int padding) {
+        notifyMessage = new Label(message);
+        notifyMessage.setMinHeight(Region.USE_PREF_SIZE);
+        notifyMessage.setAlignment(Pos.TOP_CENTER);
+        notifyMessage.setPadding(new Insets(padding));
+        notifyMessage.setFont(new Font(fontSize));
+        notifyMessage.setTextFill(paint);
+        notifyMessage.setWrapText(true);
+
     }
 
     public void setHeight(int height) {
@@ -48,10 +63,6 @@ public class NotificationBuilder {
 
     public void setVerticalAlignment(VerticalAlignment vAlign) {
         verticalAlignment = vAlign;
-    }
-
-    public void setNotificationMessage(String message) {
-        notificationMessage = message;
     }
 
     public void addControlButtons() {

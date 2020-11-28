@@ -38,12 +38,22 @@ public class Notification {
     private Button closeButton;
 
 
-    public Notification(int width, int height, double opacity, VerticalAlignment vAl, HorizontalAlignment hAl) {
+    public Notification(
+            int width, int height, double opacity,
+            VerticalAlignment vAl, HorizontalAlignment hAl,
+            Label notifyMessage) {
+
         this.height = height;
         this.width = width;
 
         verticalAlignmentAlign = vAl;
         horizontalAlignmentAlign = hAl;
+
+        contentBox = new VBox(notifyMessage);
+        contentBox.setPrefSize(width, height * 0.6);
+
+        canvas.setCenter(contentBox);
+        BorderPane.setAlignment(contentBox, Pos.TOP_CENTER);
 
         buildCloseButton();
 
@@ -67,26 +77,6 @@ public class Notification {
         notifyStage.setScene(notifyScene);
 
         setStageAlignment();
-    }
-
-    public void buildMessage(int fontSize, Paint paint, String message, int padding) {
-        notifyMessage = new Label(message);
-        notifyMessage.setMinHeight(Region.USE_PREF_SIZE);
-        notifyMessage.setAlignment(Pos.TOP_CENTER);
-        notifyMessage.setPadding(new Insets(padding));
-        notifyMessage.setFont(new Font(fontSize));
-        notifyMessage.setTextFill(paint);
-        notifyMessage.setWrapText(true);
-
-        contentBox = new VBox(notifyMessage);
-        contentBox.setPrefSize(width, height * 0.6);
-
-        canvas.setCenter(contentBox);
-        BorderPane.setAlignment(contentBox, Pos.TOP_CENTER);
-    }
-
-    protected void buildMessageBox() {
-
     }
 
     protected void setStageAlignment() {
