@@ -34,6 +34,7 @@ public class Notification {
 
     private final VerticalAlignment verticalAlignmentAlign;
     private final HorizontalAlignment horizontalAlignmentAlign;
+    private FlowPane controlsPane = new FlowPane();
 
     private Label notifyMessage;
     private Button closeButton;
@@ -66,6 +67,10 @@ public class Notification {
         canvas.setStyle("-fx-background-color: #363636;");
         canvas.setPrefSize(width, height);
 
+        canvas.setBottom(controlsPane);
+        controlsPane.setAlignment(Pos.TOP_CENTER);
+        controlsPane.setHgap(5);
+
         notifyScene = new Scene(canvas);
 
         // building scene
@@ -80,8 +85,14 @@ public class Notification {
         setStageAlignment();
     }
 
-    public void addControls(Node node) {
-        contentBox.getChildren().addAll(node);
+    public void addControls(Button btn) {
+        btn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                notifyStage.close();
+            }
+        });
+        controlsPane.getChildren().addAll(btn);
     }
 
     protected void setStageAlignment() {

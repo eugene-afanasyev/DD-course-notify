@@ -20,7 +20,9 @@ public class NotificationBuilder {
     private HorizontalAlignment horizontalAlignment = HorizontalAlignment.CENTER;
     private VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
 
-    private HBox controlsPane = new HBox();
+    Button cancelButton;
+    Button okButton;
+
 
     private Label notifyMessage;
 
@@ -33,7 +35,8 @@ public class NotificationBuilder {
         notification = new Notification(
                 width, height, opacity,
                 verticalAlignment, horizontalAlignment, notifyMessage);
-        notification.addControls(controlsPane);
+        notification.addControls(okButton);
+        notification.addControls(cancelButton);
 
         return notification;
     }
@@ -70,20 +73,16 @@ public class NotificationBuilder {
     }
 
     public void addControlButtons() {
-        Button okButton = new Button("Ok");
+        okButton = new Button("Ok");
         okButton.setFont(new Font("Bold", 18));
         okButton.setBackground(Background.EMPTY);
         okButton.setTextFill(Paint.valueOf("#bbccdd"));
         okButton.setStyle("-fx-border-width: 1; -fx-border-color: #bbccdd; -fx-border-radius: 1");
 
-        Button cancelButton = new Button("Cancel");
+        cancelButton = new Button("Cancel");
         cancelButton.setFont(new Font(18));
         cancelButton.setBackground(Background.EMPTY);
         cancelButton.setTextFill(Paint.valueOf("#bbccdd"));
         cancelButton.setStyle("-fx-border-width: 1; -fx-border-color: #bbccdd; -fx-border-radius: 1");
-
-        controlsPane = new HBox(okButton, cancelButton);
-        controlsPane.setAlignment(Pos.BOTTOM_CENTER);
-        controlsPane.setSpacing(5);
     }
 }
