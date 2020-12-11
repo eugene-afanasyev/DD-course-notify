@@ -1,10 +1,12 @@
 package notify;
 
 import javafx.animation.*;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -15,6 +17,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import javafx.util.Duration;
 import notify.alignments.HorizontalAlignment;
 import notify.alignments.VerticalAlignment;
@@ -27,21 +30,21 @@ public class Notification {
 
     private int width;
     private int height;
+    private double opacity = 1;
+    private VerticalAlignment verticalAlignment;
+    private HorizontalAlignment horizontalAlignment;
+
 
     private VBox contentBox = new VBox();
     private BorderPane canvas = new BorderPane();
-
-    private VerticalAlignment verticalAlignment;
-    private HorizontalAlignment horizontalAlignment;
     private FlowPane controlsPane = new FlowPane();
 
-    private Label notifyMessage = new Label("");
     private Button closeButton;
-
     private Button okButton;
     private Button cancelButton;
 
-    private double opacity = 1;
+    private Label notifyMessage = new Label("");
+    private ComboBox<Label> labelComboBox;
 
     public Notification() {
         verticalAlignment = VerticalAlignment.TOP;
@@ -53,20 +56,7 @@ public class Notification {
         defaultConfig();
     }
 
-    public void setNotifyMessage(String str) {
-        notifyMessage.setMinHeight(Region.USE_PREF_SIZE);
-        notifyMessage.setAlignment(Pos.TOP_CENTER);
-        notifyMessage.setPadding(new Insets(10));
-        notifyMessage.setFont(new Font(25));
-        notifyMessage.setTextFill(Paint.valueOf("#F0FFFF"));
-        notifyMessage.setWrapText(true);
-        notifyMessage.setText(str);
-    }
-
     protected void defaultConfig() {
-        contentBox.getChildren().addAll(notifyMessage);
-        contentBox.setPrefSize(width, height * 0.6);
-
         canvas.setCenter(contentBox);
         BorderPane.setAlignment(contentBox, Pos.TOP_CENTER);
 
@@ -83,18 +73,47 @@ public class Notification {
         controlsPane.setAlignment(Pos.TOP_CENTER);
         controlsPane.setHgap(5);
 
-        notifyScene = new Scene(canvas);
+    }
 
-        // building scene
-        notifyStage = new Stage();
-        notifyStage.setWidth(width);
-        notifyStage.setMinHeight(height);
-        notifyStage.setOpacity(opacity);
-        notifyStage.initStyle(StageStyle.UNDECORATED);
-        notifyStage.setAlwaysOnTop(true);
-        notifyStage.setScene(notifyScene);
+    public void addComboBox(ObservableList<Label> items, String promptText) {
+        labelComboBox = new ComboBox<>(items);
+        labelComboBox.setPromptText(promptText);
+        labelComboBox.setCellFactory(new Callback<ListView<Label>, ListCell<Label>>() {
+            @Override
+            public ListCell<Label> call(ListView<Label> labelListView) {
+                final ListCell<Label> cell = new ListCell<Label>() {
+                    {
+                        super.setPrefWidth(50);
+                    }
 
-        setStageAlignment();
+                    @Override
+                    public void updateItem(Label item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item != null) {
+                            setText(item.getText());
+                            setTextFill(Paint.valueOf("#ffffff"));
+                        }
+                    }
+
+                };
+                return cell;
+            }
+        });
+
+        contentBox.getChildren().add(labelComboBox);
+    }
+
+    public void setNotifyMessage(String str) {
+        notifyMessage.setMinHeight(Region.USE_PREF_SIZE);
+        notifyMessage.setAlignment(Pos.TOP_CENTER);
+        notifyMessage.setPadding(new Insets(10));
+        notifyMessage.setFont(new Font(25));
+        notifyMessage.setTextFill(Paint.valueOf("#F0FFFF"));
+        notifyMessage.setWrapText(true);
+        notifyMessage.setText(str);
+
+        contentBox.getChildren().addAll(notifyMessage);
+        contentBox.setPrefSize(width, height * 0.6);
     }
 
     public void addControlButtons() {
@@ -142,7 +161,7 @@ public class Notification {
 
     protected void buildCloseButton() {
         closeButton = new Button();
-        Image btnIcon = new Image(getClass().getResourceAsStream("resources/close-icon.png"));
+        Image btnIcon = new Image(getClass().getResource("/close-icon.png").toExternalForm());
         ImageView iconImg = new ImageView(btnIcon);
 
         closeButton.setBackground(Background.EMPTY);
@@ -157,6 +176,19 @@ public class Notification {
     }
 
     protected void show() {
+        notifyScene = new Scene(canvas);
+        notifyScene.getStylesheets().add(getClass().getResource("/stylesheet.css").toExternalForm());
+
+        // building scene
+        notifyStage = new Stage();
+        notifyStage.setWidth(width);
+        notifyStage.setMinHeight(height);
+        notifyStage.setOpacity(opacity);
+        notifyStage.initStyle(StageStyle.UNDECORATED);
+        notifyStage.setAlwaysOnTop(true);
+        notifyStage.setScene(notifyScene);
+        setStageAlignment();
+
         notifyStage.show();
     }
 

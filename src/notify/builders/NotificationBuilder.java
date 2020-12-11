@@ -1,5 +1,6 @@
 package notify.builders;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -13,20 +14,8 @@ import notify.alignments.VerticalAlignment;
 public class NotificationBuilder {
     private Notification notification = new Notification();
 
-    private int width;
-    private int height;
-    private double opacity = 1;
-    private HorizontalAlignment horizontalAlignment = HorizontalAlignment.CENTER;
-    private VerticalAlignment verticalAlignment = VerticalAlignment.TOP;
-
-    private Label notifyLabel;
-
-    private boolean controlsAdded = false;
-
     public NotificationBuilder() {
         notification = new Notification();
-        width = 400;
-        height = 300;
     }
 
     public Notification build() {
@@ -59,5 +48,16 @@ public class NotificationBuilder {
 
     public void addControlButtons() {
         notification.addControlButtons();
+    }
+
+    public void setLabelComboBox(ObservableList<Label> items, String promptText) {
+        for (Label label :
+                items) {
+            label.setMinHeight(Region.USE_PREF_SIZE);
+            label.setAlignment(Pos.TOP_CENTER);
+            label.setFont(new Font(14));
+            label.setWrapText(true);
+        }
+        notification.addComboBox(items, promptText);
     }
 }
