@@ -4,7 +4,6 @@ import javafx.animation.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,33 +23,47 @@ import java.awt.*;
 
 public class Notification {
     private Scene notifyScene;
-    private final Stage notifyStage;
+    private Stage notifyStage;
 
-    private final int width;
-    private final int height;
+    private int width;
+    private int height;
 
     private VBox contentBox = new VBox();
     private BorderPane canvas = new BorderPane();
 
-    private final VerticalAlignment verticalAlignmentAlign;
-    private final HorizontalAlignment horizontalAlignmentAlign;
+    private VerticalAlignment verticalAlignment;
+    private HorizontalAlignment horizontalAlignment;
     private FlowPane controlsPane = new FlowPane();
 
-    private Label notifyMessage;
+    private Label notifyMessage = new Label("");
     private Button closeButton;
 
+    private Button okButton;
+    private Button cancelButton;
 
-    public Notification(
-            int width, int height, double opacity,
-            VerticalAlignment vAl, HorizontalAlignment hAl,
-            Label notifyMessage) {
+    private double opacity = 1;
 
-        this.height = height;
-        this.width = width;
+    public Notification() {
+        verticalAlignment = VerticalAlignment.TOP;
+        horizontalAlignment = HorizontalAlignment.RIGHT;
 
-        verticalAlignmentAlign = vAl;
-        horizontalAlignmentAlign = hAl;
+        height = 200;
+        width = 300;
 
+        defaultConfig();
+    }
+
+    public void setNotifyMessage(String str) {
+        notifyMessage.setMinHeight(Region.USE_PREF_SIZE);
+        notifyMessage.setAlignment(Pos.TOP_CENTER);
+        notifyMessage.setPadding(new Insets(10));
+        notifyMessage.setFont(new Font(25));
+        notifyMessage.setTextFill(Paint.valueOf("#F0FFFF"));
+        notifyMessage.setWrapText(true);
+        notifyMessage.setText(str);
+    }
+
+    protected void defaultConfig() {
         contentBox.getChildren().addAll(notifyMessage);
         contentBox.setPrefSize(width, height * 0.6);
 
@@ -59,7 +72,6 @@ public class Notification {
 
         buildCloseButton();
 
-        // building canvas
         FlowPane menuPane = new FlowPane(closeButton);
         menuPane.setAlignment(Pos.TOP_LEFT);
 
@@ -85,40 +97,46 @@ public class Notification {
         setStageAlignment();
     }
 
-    public void addControls(Button btn) {
-        btn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    public void addControlButtons() {
+        okButton = new Button("Ok");
+        okButton.setFont(new Font("Bold", 18));
+        okButton.setBackground(Background.EMPTY);
+        okButton.setTextFill(Paint.valueOf("#bbccdd"));
+        okButton.setStyle("-fx-border-width: 1; -fx-border-color: #bbccdd; -fx-border-radius: 1");
+        okButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 notifyStage.close();
             }
         });
-        controlsPane.getChildren().addAll(btn);
+
+        cancelButton = new Button("Cancel");
+        cancelButton.setFont(new Font(18));
+        cancelButton.setBackground(Background.EMPTY);
+        cancelButton.setTextFill(Paint.valueOf("#bbccdd"));
+        cancelButton.setStyle("-fx-border-width: 1; -fx-border-color: #bbccdd; -fx-border-radius: 1");
+        cancelButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                notifyStage.close();
+            }
+        });
+
+        controlsPane.getChildren().addAll(okButton, cancelButton);
     }
 
     protected void setStageAlignment() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        switch (horizontalAlignmentAlign) {
-            case LEFT:
-                notifyStage.setX(30);
-                break;
-            case RIGHT:
-                notifyStage.setX(screenSize.width - notifyStage.getWidth() - 30);
-                break;
-            default:
-                notifyStage.setX((int)(screenSize.width / 2) - notifyStage.getWidth() / 2);
-                break;
+        switch (horizontalAlignment) {
+            case LEFT -> notifyStage.setX(30);
+            case RIGHT -> notifyStage.setX(screenSize.width - notifyStage.getWidth() - 30);
+            default -> notifyStage.setX((int) (screenSize.width / 2) - notifyStage.getWidth() / 2);
         }
 
-        switch (verticalAlignmentAlign) {
-            case TOP:
-                notifyStage.setY(30);
-                break;
-            case BOTTOM:
-                notifyStage.setY(screenSize.height - notifyStage.getHeight() - 30);
-                break;
-            default:
-                notifyStage.setY((int)(screenSize.height / 2) - notifyStage.getHeight() / 2);
-                break;
+        switch (verticalAlignment) {
+            case TOP -> notifyStage.setY(30);
+            case BOTTOM -> notifyStage.setY(screenSize.height - notifyStage.getHeight() - 30);
+            default -> notifyStage.setY((int) (screenSize.height / 2) - notifyStage.getHeight() / 2);
         }
     }
 
@@ -152,11 +170,51 @@ public class Notification {
         tl.play();
     }
 
-    public HorizontalAlignment getHorizontalAlignmentAlign() {
-        return horizontalAlignmentAlign;
+    public HorizontalAlignment getHorizontalAlignment() {
+        return horizontalAlignment;
     }
 
-    public VerticalAlignment getVerticalAlignmentAlign() {
-        return verticalAlignmentAlign;
+    public VerticalAlignment getVerticalAlignment() {
+        return verticalAlignment;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setOpacity(double opacity) {
+        this.opacity = opacity;
+    }
+
+    public double getOpacity() {
+        return opacity;
+    }
+
+    public void setHorizontalAlignment(HorizontalAlignment horizontalAlignment) {
+        this.horizontalAlignment = horizontalAlignment;
+    }
+
+    public HorizontalAlignment getHorizontalAlign() {
+        return horizontalAlignment;
+    }
+
+    public void setVerticalAlignment(VerticalAlignment verticalAlignment) {
+        this.verticalAlignment = verticalAlignment;
+    }
+
+    public VerticalAlignment getVerticalAlign() {
+        return verticalAlignment;
     }
 }
