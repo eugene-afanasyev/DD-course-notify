@@ -60,4 +60,8 @@ public class NotificationBuilder {
         }
         notification.addComboBox(items, promptText);
     }
+
+    public void addInputField() {
+        notification.addInputField();
+    }
 }

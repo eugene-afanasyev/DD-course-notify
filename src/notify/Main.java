@@ -26,7 +26,8 @@ public class Main extends Application {
         nb.setWidth(400);
         nb.setMessage("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
         nb.addControlButtons();
-        nb.setLabelComboBox(labels, "choose element");
+//        nb.setLabelComboBox(labels, "choose element");
+        nb.addInputField();
 
         Notification n = nb.build();
         n.show();

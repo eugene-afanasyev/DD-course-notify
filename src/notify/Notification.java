@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -17,6 +18,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import notify.alignments.HorizontalAlignment;
@@ -44,6 +46,7 @@ public class Notification {
     private Button cancelButton;
 
     private Label notifyMessage = new Label("");
+    private TextField textField;
     private ComboBox<Label> labelComboBox;
 
     public Notification() {
@@ -73,6 +76,15 @@ public class Notification {
         controlsPane.setAlignment(Pos.TOP_CENTER);
         controlsPane.setHgap(5);
 
+    }
+
+    public void addInputField() {
+        textField = new TextField();
+        textField.setStyle("-fx-text-fill: #e9f2ff; -fx-font-size: 18;" +
+                "-fx-background-color: #868686; -fx-border-width: 3;" +
+                "-fx-border-color: #afcaff");
+        textField.setText("input field");
+        contentBox.getChildren().addAll(textField);
     }
 
     public void addComboBox(ObservableList<Label> items, String promptText) {
@@ -189,15 +201,28 @@ public class Notification {
         notifyStage.setScene(notifyScene);
         setStageAlignment();
 
+        animateOpacity();
         notifyStage.show();
     }
 
-    private void AnimateOpacity() {
+    public void setOnClose(EventHandler<WindowEvent> eventHandler) {
+        notifyStage.setOnCloseRequest(eventHandler);
+    }
+
+    public Label getCBoxSelectedItem() {
+        return labelComboBox.getSelectionModel().getSelectedItem();
+    }
+
+    public String getTextFieldInput() {
+        return textField.getText();
+    }
+
+    private void animateOpacity() {
         double requiredOpacity = notifyStage.getOpacity();
         notifyStage.opacityProperty().set(0);
         Timeline tl = new Timeline();
         var kv = new KeyValue(notifyStage.opacityProperty(), requiredOpacity);
-        var kf = new KeyFrame(Duration.millis(800), kv);
+        var kf = new KeyFrame(Duration.millis(1200), kv);
         tl.getKeyFrames().addAll(kf);
         tl.play();
     }
