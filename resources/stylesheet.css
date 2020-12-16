@@ -2,6 +2,8 @@
     -fx-font-size: 15;
 }
 
+.root { -fx-background-color: transparent; }
+
 .combo-box .list-cell
 {
     -fx-background: white;

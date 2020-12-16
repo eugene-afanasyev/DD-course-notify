@@ -66,6 +66,6 @@ public class NotificationBuilder {
     }
 
     public void addSlidingEffect() {
-
+        notification.addSlidingEffect();
     }
 }

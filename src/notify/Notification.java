@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -14,8 +16,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
@@ -25,6 +29,7 @@ import notify.alignments.HorizontalAlignment;
 import notify.alignments.VerticalAlignment;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Notification {
     private Scene notifyScene;
@@ -49,8 +54,10 @@ public class Notification {
     private TextField textField;
     private ComboBox<Label> labelComboBox;
 
+    private boolean is_sliding = false;
+
     public Notification() {
-        verticalAlignment = VerticalAlignment.TOP;
+        verticalAlignment = VerticalAlignment.CENTER;
         horizontalAlignment = HorizontalAlignment.RIGHT;
 
         height = 200;
@@ -76,6 +83,26 @@ public class Notification {
         controlsPane.setAlignment(Pos.TOP_CENTER);
         controlsPane.setHgap(5);
 
+        notifyScene = new Scene(canvas);
+        notifyScene.getStylesheets().add(getClass().getResource("/stylesheet.css").toExternalForm());
+    }
+
+    public void addSlidingEffect() {
+        is_sliding = true;
+    }
+    private void addPosTranslation() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int translatePos = verticalAlignment == VerticalAlignment.TOP ? -250 :
+                (int)screenSize.getHeight() + 250;
+
+        TranslateTransition translateTransition = new TranslateTransition();
+        Node root = notifyScene.getRoot();
+        root.setTranslateY(translatePos);
+        translateTransition.setDuration(Duration.seconds(1));
+        translateTransition.setNode(root);
+        translateTransition.setByY(-translatePos);
+        translateTransition.setAutoReverse(false);
+        translateTransition.play();
     }
 
     public void addInputField() {
@@ -106,7 +133,6 @@ public class Notification {
                             setTextFill(Paint.valueOf("#ffffff"));
                         }
                     }
-
                 };
                 return cell;
             }
@@ -160,15 +186,27 @@ public class Notification {
     protected void setStageAlignment() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         switch (horizontalAlignment) {
-            case LEFT -> notifyStage.setX(30);
-            case RIGHT -> notifyStage.setX(screenSize.width - notifyStage.getWidth() - 30);
-            default -> notifyStage.setX((int) (screenSize.width / 2) - notifyStage.getWidth() / 2);
+            case LEFT:
+                notifyStage.setX(30);
+                break;
+            case RIGHT:
+                notifyStage.setX(screenSize.width - notifyStage.getMinWidth() - 30);
+                break;
+            default:
+                notifyStage.setX((int) (screenSize.width / 2) - notifyStage.getMinWidth() / 2);
+                break;
         }
 
         switch (verticalAlignment) {
-            case TOP -> notifyStage.setY(30);
-            case BOTTOM -> notifyStage.setY(screenSize.height - notifyStage.getHeight() - 30);
-            default -> notifyStage.setY((int) (screenSize.height / 2) - notifyStage.getHeight() / 2);
+            case TOP:
+                notifyStage.setY(30);
+                break;
+            case BOTTOM:
+                notifyStage.setY(screenSize.height - notifyStage.getMinWidth() - 30);
+                break;
+            default:
+                notifyStage.setY((int) (screenSize.height / 2) - notifyStage.getMinWidth() / 2);
+                break;
         }
     }
 
@@ -189,21 +227,20 @@ public class Notification {
     }
 
     protected void show() {
-        notifyScene = new Scene(canvas);
-        notifyScene.getStylesheets().add(getClass().getResource("/stylesheet.css").toExternalForm());
-
         // building scene
         notifyStage = new Stage();
         notifyStage.setWidth(width);
         notifyStage.setMinHeight(height);
         notifyStage.setOpacity(opacity);
-        notifyStage.initStyle(StageStyle.UNDECORATED);
+        notifyStage.initStyle(StageStyle.TRANSPARENT);
         notifyStage.setAlwaysOnTop(true);
         notifyStage.setScene(notifyScene);
+        notifyScene.setFill(Color.rgb(0,0,0,0));
         setStageAlignment();
 
-        animateOpacity();
         notifyStage.show();
+        if(is_sliding)
+            addPosTranslation();
     }
 
     public void setOnClose(EventHandler<WindowEvent> eventHandler) {
