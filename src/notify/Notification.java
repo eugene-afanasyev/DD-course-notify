@@ -111,8 +111,9 @@ public class Notification {
                 return cell;
             }
         });
-
-        contentBox.getChildren().add(labelComboBox);
+        BorderPane bp = new BorderPane();
+        bp.setCenter(labelComboBox);
+        contentBox.getChildren().add(bp);
     }
 
     public void setNotifyMessage(String str) {

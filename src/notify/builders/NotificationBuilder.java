@@ -64,4 +64,8 @@ public class NotificationBuilder {
     public void addInputField() {
         notification.addInputField();
     }
+
+    public void addSlidingEffect() {
+
+    }
 }
