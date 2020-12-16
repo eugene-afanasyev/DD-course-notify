@@ -19,7 +19,7 @@ public class Main extends Application {
         );
 
         NotificationBuilder nb = new NotificationBuilder();
-        nb.setHorizontalAlignment(HorizontalAlignment.RIGHT);
+        nb.setHorizontalAlignment(HorizontalAlignment.CENTER);
         nb.setVerticalAlignment(VerticalAlignment.BOTTOM);
         nb.setOpacity(0.94);
         nb.setHeight(280);
@@ -29,6 +29,7 @@ public class Main extends Application {
         nb.setLabelComboBox(labels, "choose element");
         nb.addInputField();
         nb.addSlidingEffect();
+        nb.addNotificationSound();
 
         Notification n = nb.build();
         n.show();

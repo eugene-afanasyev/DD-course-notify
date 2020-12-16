@@ -68,4 +68,8 @@ public class NotificationBuilder {
     public void addSlidingEffect() {
         notification.addSlidingEffect();
     }
+
+    public void addNotificationSound() {
+        notification.addNotificationSound();
+    }
 }

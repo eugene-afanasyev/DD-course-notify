@@ -25,6 +25,8 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 import notify.alignments.HorizontalAlignment;
 import notify.alignments.VerticalAlignment;
 
@@ -41,7 +43,6 @@ public class Notification {
     private VerticalAlignment verticalAlignment;
     private HorizontalAlignment horizontalAlignment;
 
-
     private VBox contentBox = new VBox();
     private BorderPane canvas = new BorderPane();
     private FlowPane controlsPane = new FlowPane();
@@ -55,6 +56,9 @@ public class Notification {
     private ComboBox<Label> labelComboBox;
 
     private boolean is_sliding = false;
+
+    private Player nPlayer;
+    private boolean is_sound_playing = false;
 
     public Notification() {
         verticalAlignment = VerticalAlignment.CENTER;
@@ -85,6 +89,12 @@ public class Notification {
 
         notifyScene = new Scene(canvas);
         notifyScene.getStylesheets().add(getClass().getResource("/stylesheet.css").toExternalForm());
+
+        try {
+            nPlayer = new Player(getClass().getResourceAsStream("/default.mp3"));
+        } catch (JavaLayerException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addSlidingEffect() {
@@ -103,6 +113,10 @@ public class Notification {
         translateTransition.setByY(-translatePos);
         translateTransition.setAutoReverse(false);
         translateTransition.play();
+    }
+
+    public void addNotificationSound() {
+        is_sound_playing = true;
     }
 
     public void addInputField() {
@@ -190,10 +204,10 @@ public class Notification {
                 notifyStage.setX(30);
                 break;
             case RIGHT:
-                notifyStage.setX(screenSize.width - notifyStage.getMinWidth() - 30);
+                notifyStage.setX(screenSize.width - notifyStage.getWidth() - 30);
                 break;
             default:
-                notifyStage.setX((int) (screenSize.width / 2) - notifyStage.getMinWidth() / 2);
+                notifyStage.setX((int) (screenSize.width / 2) - notifyStage.getWidth() / 2);
                 break;
         }
 
@@ -202,10 +216,10 @@ public class Notification {
                 notifyStage.setY(30);
                 break;
             case BOTTOM:
-                notifyStage.setY(screenSize.height - notifyStage.getMinWidth() - 30);
+                notifyStage.setY(screenSize.height - notifyStage.getMinHeight() - 30);
                 break;
             default:
-                notifyStage.setY((int) (screenSize.height / 2) - notifyStage.getMinWidth() / 2);
+                notifyStage.setY((int) (screenSize.height / 2) - notifyStage.getMinHeight() / 2);
                 break;
         }
     }
@@ -239,8 +253,15 @@ public class Notification {
         setStageAlignment();
 
         notifyStage.show();
-        if(is_sliding)
+
+        if (is_sliding)
             addPosTranslation();
+
+        if (is_sound_playing) {
+            NotificationSoundThread nst = new NotificationSoundThread(nPlayer);
+            nst.start();
+
+        }
     }
 
     public void setOnClose(EventHandler<WindowEvent> eventHandler) {
@@ -311,5 +332,21 @@ public class Notification {
 
     public VerticalAlignment getVerticalAlign() {
         return verticalAlignment;
+    }
+}
+
+class NotificationSoundThread extends Thread {
+    Player player;
+    NotificationSoundThread(Player nPlayer){
+        player = nPlayer;
+    }
+
+    @Override
+    public void run () {
+        try {
+            player.play();
+        } catch (JavaLayerException e) {
+            e.printStackTrace();
+        }
     }
 }
