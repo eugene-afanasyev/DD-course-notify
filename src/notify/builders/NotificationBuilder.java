@@ -1,5 +1,6 @@
 package notify.builders;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -50,15 +51,18 @@ public class NotificationBuilder {
         notification.addControlButtons();
     }
 
-    public void setLabelComboBox(ObservableList<Label> items, String promptText) {
-        for (Label label :
+    public void setLabelComboBox(ObservableList<String> items, String promptText) {
+        ObservableList<Label> labels = FXCollections.observableArrayList();
+        for (String string :
                 items) {
+            Label label = new Label(string);
             label.setMinHeight(Region.USE_PREF_SIZE);
             label.setAlignment(Pos.TOP_CENTER);
             label.setFont(new Font(14));
             label.setWrapText(true);
+            labels.add(label);
         }
-        notification.addComboBox(items, promptText);
+        notification.addComboBox(labels, promptText);
     }
 
     public void addInputField() {

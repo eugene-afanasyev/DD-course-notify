@@ -286,6 +286,10 @@ public class Notification {
         tl.play();
     }
 
+    public void setOnOkButton(EventHandler<MouseEvent> mouseEventEventHandler) {
+        okButton.setOnMouseClicked(mouseEventEventHandler);
+    }
+
     public HorizontalAlignment getHorizontalAlignment() {
         return horizontalAlignment;
     }

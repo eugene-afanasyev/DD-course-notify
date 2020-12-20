@@ -14,8 +14,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception{
-        ObservableList<Label> labels = FXCollections.observableArrayList(
-                new Label("first"), new Label("second"), new Label("third")
+        ObservableList<String> strings = FXCollections.observableArrayList(
+                "first", "second", "third"
         );
 
         NotificationBuilder nb = new NotificationBuilder();
@@ -26,7 +26,7 @@ public class Main extends Application {
         nb.setWidth(400);
         nb.setMessage("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
         nb.addControlButtons();
-        nb.setLabelComboBox(labels, "choose element");
+        nb.setLabelComboBox(strings, "choose element");
         nb.addInputField();
         nb.addSlidingEffect();
         nb.addNotificationSound();
