@@ -2,15 +2,17 @@ package notify.builders;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.stage.WindowEvent;
 import notify.alignments.HorizontalAlignment;
 import notify.Notification;
 import notify.alignments.VerticalAlignment;
+import notify.callback.ReturnValuesTuple;
 
 public class NotificationBuilder {
     private Notification notification = new Notification();
@@ -75,5 +77,9 @@ public class NotificationBuilder {
 
     public void addNotificationSound() {
         notification.addNotificationSound();
+    }
+
+    public void setOnNotifiactionClosed(EventHandler<WindowEvent> eventHandler) {
+        notification.setOnNotificationClosed(eventHandler);
     }
 }

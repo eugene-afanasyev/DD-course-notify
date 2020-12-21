@@ -3,14 +3,21 @@ package notify;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
-import javafx.scene.paint.Paint;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import notify.alignments.HorizontalAlignment;
 import notify.alignments.VerticalAlignment;
 import notify.builders.NotificationBuilder;
+import notify.callback.ReturnValuesTuple;
 
 public class Main extends Application {
+
+    String textField;
+    String combobox;
+    ReturnValuesTuple rtv;
+
 
     @Override
     public void start(Stage stage) throws Exception{
@@ -32,7 +39,12 @@ public class Main extends Application {
         nb.addNotificationSound();
 
         Notification n = nb.build();
-        n.show();
+        n.setOnNotificationClosed(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent windowEvent) {
+                rtv = n.getReturnValues();
+            }
+        });
     }
 
 

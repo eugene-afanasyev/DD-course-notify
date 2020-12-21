@@ -1,12 +1,15 @@
 package notify;
 
 import javafx.animation.*;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -19,7 +22,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.transform.Translate;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
@@ -29,13 +31,30 @@ import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.Player;
 import notify.alignments.HorizontalAlignment;
 import notify.alignments.VerticalAlignment;
+import notify.callback.NotificationButton;
+import notify.callback.ReturnValuesTuple;
 
 import java.awt.*;
-import java.util.ArrayList;
+
+class NotificationThread extends Thread {
+    final Stage stage;
+
+    NotificationThread(Stage notificationStage) {
+        stage = notificationStage;
+    }
+
+    @Override
+    public void run() {
+        stage.show();
+//        while (!isInterrupted()) {
+//
+//        }
+    }
+}
 
 public class Notification {
     private Scene notifyScene;
-    private Stage notifyStage;
+    private Stage notifyStage = new Stage();
 
     private int width;
     private int height;
@@ -52,13 +71,16 @@ public class Notification {
     private Button cancelButton;
 
     private Label notifyMessage = new Label("");
-    private TextField textField;
-    private ComboBox<Label> labelComboBox;
+    private TextField textField = new TextField();
+    private ComboBox<Label> labelComboBox = new ComboBox<>();
 
     private boolean is_sliding = false;
 
     private Player nPlayer;
     private boolean is_sound_playing = false;
+
+    ReturnValuesTuple returnValuesTuple = new ReturnValuesTuple(
+            NotificationButton.CLOSE, "", "");
 
     public Notification() {
         verticalAlignment = VerticalAlignment.CENTER;
@@ -95,11 +117,30 @@ public class Notification {
         } catch (JavaLayerException e) {
             e.printStackTrace();
         }
+
+        textField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                returnValuesTuple.setTextFieldValue(textField.getText());
+            }
+        });
+
+        labelComboBox.valueProperty().addListener(new ChangeListener<Label>() {
+            @Override
+            public void changed(ObservableValue<? extends Label> observableValue, Label label, Label t1) {
+                returnValuesTuple.setComboboxValue(t1.getText());
+            }
+        });
+    }
+
+    public ReturnValuesTuple getReturnValues() {
+        return returnValuesTuple;
     }
 
     public void addSlidingEffect() {
         is_sliding = true;
     }
+
     private void addPosTranslation() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int translatePos = verticalAlignment == VerticalAlignment.TOP ? -250 :
@@ -197,6 +238,10 @@ public class Notification {
         controlsPane.getChildren().addAll(okButton, cancelButton);
     }
 
+    public void setOnNotificationClosed(EventHandler<WindowEvent> event) {
+        notifyStage.setOnCloseRequest(event);
+    }
+
     protected void setStageAlignment() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         switch (horizontalAlignment) {
@@ -240,7 +285,7 @@ public class Notification {
         });
     }
 
-    protected void show() {
+    public ReturnValuesTuple show() {
         // building scene
         notifyStage = new Stage();
         notifyStage.setWidth(width);
@@ -260,12 +305,9 @@ public class Notification {
         if (is_sound_playing) {
             NotificationSoundThread nst = new NotificationSoundThread(nPlayer);
             nst.start();
-
         }
-    }
 
-    public void setOnClose(EventHandler<WindowEvent> eventHandler) {
-        notifyStage.setOnCloseRequest(eventHandler);
+        return returnValuesTuple;
     }
 
     public Label getCBoxSelectedItem() {
@@ -284,10 +326,6 @@ public class Notification {
         var kf = new KeyFrame(Duration.millis(1200), kv);
         tl.getKeyFrames().addAll(kf);
         tl.play();
-    }
-
-    public void setOnOkButton(EventHandler<MouseEvent> mouseEventEventHandler) {
-        okButton.setOnMouseClicked(mouseEventEventHandler);
     }
 
     public HorizontalAlignment getHorizontalAlignment() {
@@ -336,6 +374,10 @@ public class Notification {
 
     public VerticalAlignment getVerticalAlign() {
         return verticalAlignment;
+    }
+
+    public ReturnValuesTuple getReturnValuesTuple() {
+        return returnValuesTuple;
     }
 }
 
