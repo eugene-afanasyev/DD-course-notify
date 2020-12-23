@@ -1,7 +1,6 @@
 package notify;
 
 import javafx.animation.*;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -74,10 +73,10 @@ public class Notification {
     private TextField textField = new TextField();
     private ComboBox<Label> labelComboBox = new ComboBox<>();
 
-    private boolean is_sliding = false;
+    private boolean isSliding = false;
 
     private Player nPlayer;
-    private boolean is_sound_playing = false;
+    private boolean isSoundPlaying = false;
 
     ReturnValuesTuple returnValuesTuple = new ReturnValuesTuple(
             NotificationButton.CLOSE, "", "");
@@ -138,7 +137,7 @@ public class Notification {
     }
 
     public void addSlidingEffect() {
-        is_sliding = true;
+        isSliding = true;
     }
 
     private void addPosTranslation() {
@@ -157,7 +156,7 @@ public class Notification {
     }
 
     public void addNotificationSound() {
-        is_sound_playing = true;
+        isSoundPlaying = true;
     }
 
     public void addInputField() {
@@ -299,10 +298,10 @@ public class Notification {
 
         notifyStage.show();
 
-        if (is_sliding)
+        if (isSliding)
             addPosTranslation();
 
-        if (is_sound_playing) {
+        if (isSoundPlaying) {
             NotificationSoundThread nst = new NotificationSoundThread(nPlayer);
             nst.start();
         }

@@ -39,6 +39,7 @@ public class Main extends Application {
         nb.addNotificationSound();
 
         Notification n = nb.build();
+        n.show();
         n.setOnNotificationClosed(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent windowEvent) {
